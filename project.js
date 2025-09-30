@@ -30,11 +30,46 @@ class Particle {
   }
 }
 
+//let myCircle;
+
 function setup() {
   createCanvas(innerWidth, innerHeight);
   // genereate particles
   generateParticles(innerWidth / 2, innerHeight / 2);
+
+ // myCircle = createObject(width / 2, height / 2, 600, 600);
 }
+
+/*function createObject(x, y, w, h) {
+  return {
+    x: x,
+    y: y,
+    w: w,
+    h: h,
+  };
+}
+
+function checkCollision(objectA, objectB) {
+  if (
+    objectA.x - objectA.w / 2 < objectB.x + objectB.w / 2 &&
+    objectA.x + objectA.w / 2 > objectB.x - objectB.w / 2 &&
+    objectA.y - objectA.h / 2 < objectB.y + objectB.h / 2 &&
+    objectA.y + objectA.h / 2 > objectB.y - objectB.h / 2
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function ParticleAsObject(Particle) {
+  return {
+    x: Particle.position.x,
+    y: Particle.position.y,
+    w: 2,
+    h: 2,
+  };
+}*/
 
 // create multiple particles from (x,y)
 function generateParticles(x, y) {
@@ -48,13 +83,21 @@ function generateParticles(x, y) {
 
 function draw() {
   background(0, 0, 0);
-  // circle
+  /* // circle
   noFill();
   stroke(255);
-  ellipse(innerWidth / 2, height / 2, 700);
+  ellipse(innerWidth / 2, height / 2, 700);*/
   // update and draw all particles
   for (let particle of particles) {
     particle.update();
     particle.draw();
+
+   /* if (checkCollision(ParticleAsObject(particle), myCircle)) {
+      particle.position.y = myCircle.y - myCircle.h / 2 - 1;
+    }*/
   }
+
+  /*noFill();
+  stroke(255);
+  ellipse(myCircle.x, myCircle.y, myCircle.w, myCircle.h);*/
 }
