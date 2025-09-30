@@ -1,17 +1,14 @@
 // This code is adapted from https://codepen.io/pixelkind/pen/VwqKyoP
+let particles = [];
 class Particle {
   constructor(x, y) {
     this.position = createVector(x, y);
     const a = Math.random() * Math.PI * 2;
     const v = 0.2 + Math.random();
     this.velocity = createVector(Math.cos(a) * v, Math.sin(a) * v);
-    this.lifespan = 100 + Math.random() * 100;
   }
 
   update() {
-    this.lifespan--;
-
-    this.velocity.mult(0.99);
     this.position.add(this.velocity);
   }
 
@@ -19,18 +16,15 @@ class Particle {
     push();
     translate(this.position.x, this.position.y);
     noStroke();
-    fill(200, 200, 0, 30);
+    fill(200, 200, 0, 150);
     ellipse(0, 0, 6);
     pop();
-  }
-
-  isDead() {
-    return this.lifespan <= 0;
   }
 }
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
+  generateParticles(innerWidth / 2, innerHeight / 2);
 }
 
 function generateParticles(x, y) {
@@ -42,21 +36,11 @@ function generateParticles(x, y) {
   }
 }
 
-let particles = [];
-
 function draw() {
   background(0, 0, 0);
 
   for (let particle of particles) {
     particle.update();
     particle.draw();
-
-    if (particle.isDead()) {
-      particles.splice(particles.indexOf(particle), 1);
-    }
   }
-}
-
-function mouseClicked() {
-  generateParticles(mouseX, mouseY);
 }
