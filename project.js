@@ -48,7 +48,10 @@ function generateParticles(x, y) {
 
 function draw() {
   background(0, 0, 0);
-
+  // circle
+  noFill();
+  stroke(255);
+  ellipse(innerWidth / 2, height / 2, 700);
   // update and draw all particles
   for (let particle of particles) {
     particle.update();
