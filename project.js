@@ -12,8 +12,9 @@ const maxRows = 150 / fieldSize;
 const divider = 8;
 
 const size = 10;
-const numCols = 70;
-const numRows = 70;
+const numCols = 30;
+const numRows = 30;
+let counter = 0;
 
 //Flow Field
 function generateField() {
@@ -30,6 +31,7 @@ function generateField() {
 function setup() {
   createCanvas(innerWidth, innerHeight);
   generateField();
+
   // skapa partiklar i mitten
   for (let i = 0; i < 200; i++) {
     let angle = random(TWO_PI);
@@ -48,8 +50,16 @@ function setup() {
 }
 
 function draw() {
-  background(0, 30);
-
+  background(25, 17, 34, 100);
+  for (let y = 0; y < numRows; y++) {
+    for (let x = 0; x < numCols; x++) {
+      const value = noise(x / divider, y / divider, counter) * size;
+      fill(53, 38, 68, 30);
+      noStroke();
+      ellipse(size / 2 + x * size, size / 2 + y * size, value);
+    }
+  }
+  push();
   // rita ramen (cirkeln)
   noFill(0);
   noStroke(0);
@@ -85,16 +95,13 @@ function draw() {
       }
     }
 
-    for (let y = 0; y < numRows; y++) {
-      for (let x = 0; x < numCols; x++) {
-        const value = noise(x / divider, y / divider) * size;
-        ellipse(size / 2 + x * size, size / 2 + y * size, value);
-      }
-    }
-
     // rita partikeln
     strokeWeight(2);
     stroke(250);
     line(p.x, p.y, p.x, p.y);
   }
+
+  pop();
+
+  counter++;
 }
