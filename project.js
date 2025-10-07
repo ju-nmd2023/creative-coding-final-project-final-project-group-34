@@ -59,7 +59,8 @@ function draw() {
       let d = dist(p.x, p.y, cirkelx, cirkely);
       if (d >= radie) {
         p.state = "orbit"; // byt till nytt beteende
-        // normalisera till exakt på ramen
+
+        //the next 4 lines of code were adapted from ChatGPT https://chatgpt.com/share/68e4ed40-bca4-8010-979e-2a4801f8d404 retrieved 07-10-2025
         p.orbitOffset = random(-100, 20); // spara ett fast avstånd från cirkeln
         let angle = atan2(p.y - cirkely, p.x - cirkelx);
         p.x = cirkelx + (radie + p.orbitOffset) * cos(angle);
