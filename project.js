@@ -1,103 +1,66 @@
-// PARTICLES
-// This code is adapted from https://codepen.io/pixelkind/pen/VwqKyoP
-
-let particles = []; // Particle array
-
-class Particle {
-  // class for particle
-  constructor(x, y) {
-    // start position
-    this.position = createVector(x, y);
-    const a = Math.random() * Math.PI * 2;
-    // angle and velocity
-    const v = 0.2 + Math.random();
-    this.velocity = createVector(Math.cos(a) * v, Math.sin(a) * v);
-  }
-
-  // Update particle position
-  update() {
-    this.position.add(this.velocity);
-  }
-
-  // draw particle
-  draw() {
-    push();
-    translate(this.position.x, this.position.y);
-    noStroke();
-    fill(200, 200, 0, 150);
-    ellipse(0, 0, 6);
-    pop();
-  }
-}
-
-//let myCircle;
+let particles = [];
+let cirkelx = 300;
+let cirkely = 300;
+let radie = 200;
 
 function setup() {
-  createCanvas(innerWidth, innerHeight);
-  // genereate particles
-  generateParticles(innerWidth / 2, innerHeight / 2);
+  createCanvas(600, 600);
 
- // myCircle = createObject(width / 2, height / 2, 600, 600);
-}
-
-/*function createObject(x, y, w, h) {
-  return {
-    x: x,
-    y: y,
-    w: w,
-    h: h,
-  };
-}
-
-function checkCollision(objectA, objectB) {
-  if (
-    objectA.x - objectA.w / 2 < objectB.x + objectB.w / 2 &&
-    objectA.x + objectA.w / 2 > objectB.x - objectB.w / 2 &&
-    objectA.y - objectA.h / 2 < objectB.y + objectB.h / 2 &&
-    objectA.y + objectA.h / 2 > objectB.y - objectB.h / 2
-  ) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function ParticleAsObject(Particle) {
-  return {
-    x: Particle.position.x,
-    y: Particle.position.y,
-    w: 2,
-    h: 2,
-  };
-}*/
-
-// create multiple particles from (x,y)
-function generateParticles(x, y) {
-  for (let i = 0; i < 400; i++) {
-    const px = x + random(-10, 10);
-    const py = y + random(-10, 10);
-    const particle = new Particle(px, py);
-    particles.push(particle);
+  // skapa partiklar i mitten
+  for (let i = 0; i < 200; i++) {
+    let angle = random(TWO_PI);
+    let speed = random(1, 2);
+    //creates a particle object
+    particles.push({
+      x: cirkelx,
+      y: cirkely,
+      vx: cos(angle) * speed,
+      vy: sin(angle) * speed,
+      state: "orbit", // "fly" = utåt, "orbit" = runt cirkeln
+    });
   }
 }
 
 function draw() {
-  background(0, 0, 0);
-  /* // circle
+  background(220);
+
+  // rita ramen (cirkeln)
   noFill();
-  stroke(255);
-  ellipse(innerWidth / 2, height / 2, 700);*/
-  // update and draw all particles
-  for (let particle of particles) {
-    particle.update();
-    particle.draw();
+  ellipse(cirkelx, cirkely, radie * 2, radie * 2);
 
-   /* if (checkCollision(ParticleAsObject(particle), myCircle)) {
-      particle.position.y = myCircle.y - myCircle.h / 2 - 1;
-    }*/
+  // uppdatera partiklar
+  for (let p of particles) {
+    if (p.state === "orbit") {
+      // flyga utåt
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // kolla om partikeln når ramen
+      let d = dist(p.x, p.y, cirkelx, cirkely);
+      if (d >= radie) {
+        p.state = "orbit"; // byt till nytt beteende
+        // normalisera till exakt på ramen
+        p.orbitOffset = random(-100, 20); // spara ett fast avstånd från cirkeln
+        let angle = atan2(p.y - cirkely, p.x - cirkelx);
+        p.x = cirkelx + (radie + p.orbitOffset) * cos(angle);
+        p.y = cirkely + (radie + p.orbitOffset) * sin(angle);
+        // ge en ny hastighet tangent mot cirkeln
+        p.vx = -sin(angle);
+        p.vy = cos(angle);
+      }
+    } else if (p.state === "orbit") {
+      // rör sig runt cirkeln
+      p.x += p.vx;
+      p.y += p.vy;
+      /* // justera så att partikeln inte glider ut/in
+      let angle = atan2(p.y - cirkely, p.x - cirkelx);
+      p.x = cirkelx + radie * cos(angle);
+      p.y = cirkely + radie * sin(angle);*/
+    }
+
+    // rita partikeln
+    noStroke();
+    fill(50);
+    circle(p.x, p.y, 5);
   }
-
-  /*noFill();
-  stroke(255);
-  ellipse(myCircle.x, myCircle.y, myCircle.w, myCircle.h);*/
 }
