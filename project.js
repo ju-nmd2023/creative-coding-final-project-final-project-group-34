@@ -11,6 +11,10 @@ const maxCols = 150 / fieldSize;
 const maxRows = 150 / fieldSize;
 const divider = 8;
 
+const size = 10;
+const numCols = 70;
+const numRows = 70;
+
 //Flow Field
 function generateField() {
   noiseSeed(Math.random() * 10);
@@ -78,6 +82,13 @@ function draw() {
         // ge en ny hastighet tangent mot cirkeln
         p.vx = -sin(angle);
         p.vy = cos(angle);
+      }
+    }
+
+    for (let y = 0; y < numRows; y++) {
+      for (let x = 0; x < numCols; x++) {
+        const value = noise(x / divider, y / divider) * size;
+        ellipse(size / 2 + x * size, size / 2 + y * size, value);
       }
     }
 
