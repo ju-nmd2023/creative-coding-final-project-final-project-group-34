@@ -1,3 +1,4 @@
+// Pearicles and circle
 let particles = [];
 let cirkelx = 300;
 let cirkely = 300;
@@ -13,19 +14,18 @@ const divider = 0;
 //Flow Field
 function generateField() {
   noiseSeed(Math.random() * 1000);
-  noiseSeed(Math.random() * 100);
   for (let x = 0; x < maxCols; x++) {
     field.push([]);
     for (let y = 0; y < maxRows; y++) {
       const value = noise(x / divider, y / divider) * Math.PI * 2;
-      field[x].push(createVector.fromAngle(cos(value), sin(value)));
+      field[x].push(createVector(cos(value), sin(value)));
     }
   }
 }
 
 function setup() {
   createCanvas(600, 600);
-
+  generateField();
   // skapa partiklar i mitten
   for (let i = 0; i < 200; i++) {
     let angle = random(TWO_PI);
@@ -37,31 +37,40 @@ function setup() {
       vx: cos(angle) * speed,
       vy: sin(angle) * speed,
       state: "orbit", // "fly" = utåt, "orbit" = runt cirkeln
+      orbitOffset: random(-100, 20),
     });
   }
 }
 
 function draw() {
-  background(0, 100);
+  background(0, 25);
 
   // rita ramen (cirkeln)
-  noFill();
+  noFill(0);
+  noStroke(0);
   ellipse(cirkelx, cirkely, radie * 2, radie * 2);
 
-  // uppdatera partiklar
+  // Following 11 lines are adapted from ChatGPT https://chatgpt.com/share/68e4fa5f-2780-8005-b5d7-90208144df5a
   for (let p of particles) {
+    // Find flow field vector
+    let col = floor(p.x / fieldSize);
+    let row = floor(p.y / fieldSize);
+
+    if (col >= 0 && col < maxCols && row >= 0 && row < maxRows) {
+      let force = field[col][row];
+      // small nudge from flow field
+      p.vx += force.x * 0.05;
+      p.vy += force.y * 0.05;
+    }
+
     if (p.state === "orbit") {
-      // flyga utåt
+      // Particle movement
       p.x += p.vx;
       p.y += p.vy;
 
-      // kolla om partikeln når ramen
+      // COLLISSION
       let d = dist(p.x, p.y, cirkelx, cirkely);
       if (d >= radie) {
-        p.state = "orbit"; // byt till nytt beteende
-
-        //the next 4 lines of code were adapted from ChatGPT https://chatgpt.com/share/68e4ed40-bca4-8010-979e-2a4801f8d404 retrieved 07-10-2025
-        p.orbitOffset = random(-100, 20); // spara ett fast avstånd från cirkeln
         let angle = atan2(p.y - cirkely, p.x - cirkelx);
         p.x = cirkelx + (radie + p.orbitOffset) * cos(angle);
         p.y = cirkely + (radie + p.orbitOffset) * sin(angle);
@@ -69,19 +78,10 @@ function draw() {
         p.vx = -sin(angle);
         p.vy = cos(angle);
       }
-    } else if (p.state === "orbit") {
-      // rör sig runt cirkeln
-      p.x += p.vx;
-      p.y += p.vy;
-      /* // justera så att partikeln inte glider ut/in
-      let angle = atan2(p.y - cirkely, p.x - cirkelx);
-      p.x = cirkelx + radie * cos(angle);
-      p.y = cirkely + radie * sin(angle);*/
     }
 
     // rita partikeln
-    noStroke();
-    fill(255);
-    circle(p.x, p.y, 5);
+    stroke(255);
+    line(p.x, p.y, p.x, p.y);
   }
 }
