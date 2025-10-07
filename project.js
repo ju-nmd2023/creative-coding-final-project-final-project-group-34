@@ -3,6 +3,26 @@ let cirkelx = 300;
 let cirkely = 300;
 let radie = 200;
 
+//Flow Field
+let field = [];
+const fieldSize = 10;
+const maxCols = 600 / fieldSize;
+const maxRows = 600 / fieldSize;
+const divider = 0;
+
+//Flow Field
+function generateField() {
+  noiseSeed(Math.random() * 1000);
+  noiseSeed(Math.random() * 100);
+  for (let x = 0; x < maxCols; x++) {
+    field.push([]);
+    for (let y = 0; y < maxRows; y++) {
+      const value = noise(x / divider, y / divider) * Math.PI * 2;
+      field[x].push(createVector.fromAngle(cos(value), sin(value)));
+    }
+  }
+}
+
 function setup() {
   createCanvas(600, 600);
 
@@ -22,7 +42,7 @@ function setup() {
 }
 
 function draw() {
-  background(220);
+  background(0, 100);
 
   // rita ramen (cirkeln)
   noFill();
@@ -60,7 +80,7 @@ function draw() {
 
     // rita partikeln
     noStroke();
-    fill(50);
+    fill(255);
     circle(p.x, p.y, 5);
   }
 }
