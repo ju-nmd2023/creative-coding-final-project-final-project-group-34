@@ -6,44 +6,45 @@ let radie = 200;
 
 //Flow Field
 let field = [];
-const fieldSize = 10;
-const maxCols = 600 / fieldSize;
-const maxRows = 600 / fieldSize;
-const divider = 0;
+const fieldSize = 5;
+const maxCols = 150 / fieldSize;
+const maxRows = 150 / fieldSize;
+const divider = 8;
 
 //Flow Field
 function generateField() {
-  noiseSeed(Math.random() * 1000);
+  noiseSeed(Math.random() * 10);
   for (let x = 0; x < maxCols; x++) {
     field.push([]);
     for (let y = 0; y < maxRows; y++) {
-      const value = noise(x / divider, y / divider) * Math.PI * 2;
+      const value = noise(x / divider, y / divider) * Math.PI * 6;
       field[x].push(createVector(cos(value), sin(value)));
     }
   }
 }
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(innerWidth, innerHeight);
   generateField();
   // skapa partiklar i mitten
   for (let i = 0; i < 200; i++) {
     let angle = random(TWO_PI);
-    let speed = random(1, 2);
+    let speed = random(3, 11);
+
     //creates a particle object
     particles.push({
       x: cirkelx,
       y: cirkely,
       vx: cos(angle) * speed,
       vy: sin(angle) * speed,
-      state: "orbit", // "fly" = utåt, "orbit" = runt cirkeln
+      state: "orbit",
       orbitOffset: random(-100, 20),
     });
   }
 }
 
 function draw() {
-  background(0, 25);
+  background(0, 30);
 
   // rita ramen (cirkeln)
   noFill(0);
@@ -81,7 +82,8 @@ function draw() {
     }
 
     // rita partikeln
-    stroke(255);
+    strokeWeight(2);
+    stroke(250);
     line(p.x, p.y, p.x, p.y);
   }
 }
