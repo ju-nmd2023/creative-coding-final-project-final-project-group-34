@@ -20,6 +20,32 @@ let numRows;
 const bgDivider = 2;
 let bgCounter = 2;
 
+// SPIRAL SHAPE
+// the following 20 lines of code were written with the help of ChatGPT, https://chatgpt.com/share/68ee1099-a0ec-8010-aef7-f687509446fb retrieved 14-10-2025
+// deifnes layers and radius for the spiral
+const layers = 5;
+const maxRadius = 200;
+
+function drawSpiral(x, y, layers, maxRadius) {
+  push();
+  translate(x, y);
+  fill(20, 12, 29);
+  stroke(200, 200, 200, 20);
+  strokeWeight(2);
+
+  beginShape();
+  for (let i = 0; i < layers * 200; i++) {
+    let angle = i * 0.1 + frameCount * 0.09; // spiral rotation
+    let radius = (i / (layers * 200)) * maxRadius;
+    let px = cos(angle) * radius;
+    let py = sin(angle) * radius;
+    vertex(px, py);
+  }
+
+  endShape();
+  pop();
+}
+
 //Flow Field
 function generateField() {
   noiseSeed(Math.random() * 10);
@@ -62,6 +88,8 @@ function setup() {
 
 function draw() {
   background(25, 17, 34, 100);
+  drawSpiral(300, 300, layers, maxRadius); // draws the spiral
+
   for (let y = 0; y < numRows; y++) {
     for (let x = 0; x < numCols; x++) {
       const value = noise(x / bgDivider, y / bgDivider, bgCounter) * size;
