@@ -1,20 +1,24 @@
 // Pearicles and circle
 let particles = [];
-let cirkelx = 300;
-let cirkely = 300;
+let cirkelx;
+let cirkely;
 let radie = 200;
 
 //Flow Field
 let field = [];
-const fieldSize = 5;
-const maxCols = 150 / fieldSize;
-const maxRows = 150 / fieldSize;
-const divider = 8;
+const fieldSize = 1.5;
+const maxCols = 150;
+const maxRows = 150;
+let fieldSizeX;
+let fieldSizeY;
+const FlowDivider = 8;
 
-const size = 10;
-const numCols = 30;
-const numRows = 30;
-let counter = 0;
+// Perlin Noise
+const size = 12;
+let numCols;
+let numRows;
+const bgDivider = 2;
+let bgCounter = 2;
 
 //Flow Field
 function generateField() {
@@ -22,7 +26,7 @@ function generateField() {
   for (let x = 0; x < maxCols; x++) {
     field.push([]);
     for (let y = 0; y < maxRows; y++) {
-      const value = noise(x / divider, y / divider) * Math.PI * 6;
+      const value = noise(x / FlowDivider, y / FlowDivider) * Math.PI * 6;
       field[x].push(createVector(cos(value), sin(value)));
     }
   }
@@ -30,6 +34,13 @@ function generateField() {
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
+
+  cirkelx = width / 2;
+  cirkely = height / 2;
+  numCols = Math.ceil(width / size);
+  numRows = Math.ceil(height / size);
+  fieldSizeX = width / maxCols;
+  fieldSizeY = height / maxRows;
   generateField();
 
   // skapa partiklar i mitten
@@ -48,16 +59,15 @@ function setup() {
     });
   }
 }
-// hello
 
 function draw() {
   background(25, 17, 34, 100);
   for (let y = 0; y < numRows; y++) {
     for (let x = 0; x < numCols; x++) {
-      const value = noise(x / divider, y / divider, counter) * size;
+      const value = noise(x / bgDivider, y / bgDivider, bgCounter) * size;
       fill(53, 38, 68, 30);
       noStroke();
-      ellipse(size / 2 + x * size, size / 2 + y * size, value);
+      ellipse(x * size + size / 2, y * size + size / 2, value);
     }
   }
   push();
@@ -103,6 +113,5 @@ function draw() {
   }
 
   pop();
-
-  counter++;
+  bgCounter += 0.08;
 }
