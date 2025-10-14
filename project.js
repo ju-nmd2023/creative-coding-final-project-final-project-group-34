@@ -87,7 +87,7 @@ function setup() {
 }
 
 function draw() {
-  background(25, 17, 34, 50);
+  background(32, 42, 68, 50);
   drawSpiral(width / 2, height / 2, layers, maxRadius); // draws the spiral
 
   for (let y = 0; y < numRows; y++) {
