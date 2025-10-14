@@ -13,38 +13,12 @@ let fieldSizeX;
 let fieldSizeY;
 const FlowDivider = 8;
 
-// Perlin Noise
-const size = 12;
+// Perlin Noise background
+const size = 80;
 let numCols;
 let numRows;
 const bgDivider = 2;
 let bgCounter = 2;
-
-// SPIRAL SHAPE
-// the following 20 lines of code were written with the help of ChatGPT, https://chatgpt.com/share/68ee1099-a0ec-8010-aef7-f687509446fb retrieved 14-10-2025
-// deifnes layers and radius for the spiral
-const layers = 5;
-const maxRadius = 200;
-
-function drawSpiral(x, y, layers, maxRadius) {
-  push();
-  translate(x, y);
-  fill(20, 12, 29);
-  stroke(200, 200, 200, 20);
-  strokeWeight(5);
-
-  beginShape();
-  for (let i = 0; i < layers * 200; i++) {
-    let angle = i * 0.1 + frameCount * 0.09; // spiral rotation
-    let radius = (i / (layers * 200)) * maxRadius;
-    let px = cos(angle) * radius;
-    let py = sin(angle) * radius;
-    vertex(px, py);
-  }
-
-  endShape();
-  pop();
-}
 
 //Flow Field
 function generateField() {
@@ -69,12 +43,11 @@ function setup() {
   fieldSizeY = height / maxRows;
   generateField();
 
-  // skapa partiklar i mitten
-  for (let i = 0; i < 200; i++) {
+  // Create particles
+  for (let i = 0; i < 2000; i++) {
     let angle = random(TWO_PI);
     let speed = random(3, 11);
 
-    //creates a particle object
     particles.push({
       x: cirkelx,
       y: cirkely,
@@ -87,23 +60,30 @@ function setup() {
 }
 
 function draw() {
-  background(32, 42, 68, 50);
-  drawSpiral(width / 2, height / 2, layers, maxRadius); // draws the spiral
+  background(0, 50);
 
-  for (let y = 0; y < numRows; y++) {
-    for (let x = 0; x < numCols; x++) {
-      const value = noise(x / bgDivider, y / bgDivider, bgCounter) * size;
-      fill(53, 38, 68, 30);
-      noStroke();
-      ellipse(x * size + size / 2, y * size + size / 2, value);
+  // Background Vera Molnár inspired
+
+  for (let x = 0; x < numCols; x++) {
+    for (let y = 0; y < numRows; y++) {
+      let angle = noise(x * 0.1, y * 0.1, frameCount * 0.01) * TWO_PI;
+      push();
+      translate(x * size + size / 2, y * size + size / 2);
+      rotate(angle);
+      stroke(255, 255, 255, 15);
+      strokeWeight(2);
+      line(-size / 2, 0, size / 2, 0);
+      pop();
     }
   }
+
   push();
-  // rita ramen (cirkeln)
+  // Draw circle
   noFill(0);
   noStroke(0);
   ellipse(cirkelx, cirkely, radie * 2, radie * 2);
 
+  // Particles with Flow field
   // Following 11 lines are adapted from ChatGPT https://chatgpt.com/share/68e4fa5f-2780-8005-b5d7-90208144df5a
   for (let p of particles) {
     // Find flow field vector
