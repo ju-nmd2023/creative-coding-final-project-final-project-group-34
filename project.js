@@ -31,7 +31,7 @@ function drawSpiral(x, y, layers, maxRadius) {
   translate(x, y);
   fill(20, 12, 29);
   stroke(200, 200, 200, 20);
-  strokeWeight(2);
+  strokeWeight(5);
 
   beginShape();
   for (let i = 0; i < layers * 200; i++) {
@@ -87,7 +87,7 @@ function setup() {
 }
 
 function draw() {
-  background(25, 17, 34, 100);
+  background(25, 17, 34, 50);
   drawSpiral(width / 2, height / 2, layers, maxRadius); // draws the spiral
 
   for (let y = 0; y < numRows; y++) {
