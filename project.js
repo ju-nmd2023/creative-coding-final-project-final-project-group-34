@@ -48,6 +48,7 @@ function setup() {
     });
   }
 }
+// hello
 
 function draw() {
   background(25, 17, 34, 100);
