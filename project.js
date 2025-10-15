@@ -13,7 +13,7 @@ let fieldSizeX;
 let fieldSizeY;
 const FlowDivider = 8;
 
-// Vera Molnar background
+// Parlin Noise + Vera Molnar background
 const size = 80;
 let numCols;
 let numRows;
