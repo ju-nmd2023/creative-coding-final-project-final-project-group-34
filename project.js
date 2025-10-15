@@ -62,7 +62,7 @@ function setup() {
 function draw() {
   background(0, 50);
 
-  // Background Vera Molnár inspired
+  // Background Perlin Noise + Vera Molnár inspired lines
 
   for (let x = 0; x < numCols; x++) {
     for (let y = 0; y < numRows; y++) {
