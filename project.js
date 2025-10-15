@@ -13,7 +13,7 @@ let fieldSizeX;
 let fieldSizeY;
 const FlowDivider = 8;
 
-// Perlin Noise background
+// Vera Molnar background
 const size = 80;
 let numCols;
 let numRows;
@@ -31,6 +31,10 @@ function generateField() {
     }
   }
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+// SETUP
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
@@ -58,6 +62,10 @@ function setup() {
     });
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+// DRAW FUNCTION
 
 function draw() {
   background(0, 50);
@@ -98,7 +106,7 @@ function draw() {
     }
 
     if (p.state === "orbit") {
-      // Particle movement
+      // particle movement
       p.x += p.vx;
       p.y += p.vy;
 
@@ -114,7 +122,7 @@ function draw() {
       }
     }
 
-    // rita partikeln
+    // draws the particle
     strokeWeight(2);
     stroke(250);
     line(p.x, p.y, p.x, p.y);
@@ -124,9 +132,12 @@ function draw() {
   bgCounter += 0.08;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
+// PLAYING SOUND
+
 let synth;
 let reverb;
-let delay;
 let chorus;
 
 const keyToNote = {
@@ -140,11 +151,10 @@ const keyToNote = {
 };
 
 window.addEventListener("load", () => {
-  reverb = new ToneEvent.Reverb({ decay: 10, wet: 0.7 }).toDestination();
-  delay = new ToneEvent.FeedbackDelay("4n", 0.5).connect(reverb);
-  chorus = new ToneEvent.Chorus(1.5, 3.5, 0.5).connect(delay).start();
+  reverb = new Tone.Reverb({ decay: 10, wet: 0.7 }).toDestination();
+  chorus = new Tone.Chorus(1.5, 3.5, 0.5).connect(reverb).start();
 
-  synth = new ToneEvent.PolySynth(Tone.AMSynth, {
+  synth = new Tone.PolySynth(Tone.AMSynth, {
     oscillator: { type: "sine" },
     envelope: { attack: 3, decay: 1, sustain: 0.9, release: 6 },
     modulation: { type: "triangle" },
