@@ -71,7 +71,6 @@ function draw() {
   background(0, 50);
 
   // Background Vera Molnár inspired
-
   for (let x = 0; x < numCols; x++) {
     for (let y = 0; y < numRows; y++) {
       let angle = noise(x * 0.1, y * 0.1, frameCount * 0.01) * TWO_PI;
@@ -139,6 +138,7 @@ function draw() {
 let synth;
 let reverb;
 let chorus;
+let player;
 
 const keyToNote = {
   a: "C3",
@@ -156,12 +156,16 @@ window.addEventListener("load", () => {
 
   synth = new Tone.PolySynth(Tone.AMSynth, {
     oscillator: { type: "sine" },
-    envelope: { attack: 3, decay: 1, sustain: 0.9, release: 6 },
-    modulation: { type: "triangle" },
-    modulationEnvelope: { attack: 2, decay: 1, sustain: 1, release: 4 },
+    envelope: { attack: 2, decay: 1, sustain: 0.9, release: 1 },
   }).connect(chorus);
 
   synth.volume.value = 20;
+
+  // the following four lines were adapted from https://tonejs.github.io/docs/14.9.17/classes/Player.html retrieved 15-10-2025
+  player = new Tone.Player("bgsound.mp3").toDestination();
+  player.loop = true;
+  player.volume.value = 0;
+  player.autostart = true;
 });
 
 window.addEventListener("click", () => {
