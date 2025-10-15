@@ -13,7 +13,7 @@ let fieldSizeX;
 let fieldSizeY;
 const FlowDivider = 8;
 
-// Vera Molnar background
+// Parlin Noise + Vera Molnar background
 const size = 80;
 let numCols;
 let numRows;
@@ -70,7 +70,8 @@ function setup() {
 function draw() {
   background(0, 50);
 
-  // Background Vera Molnár inspired
+  // Background Perlin Noise + Vera Molnár inspired lines
+
   for (let x = 0; x < numCols; x++) {
     for (let y = 0; y < numRows; y++) {
       let angle = noise(x * 0.1, y * 0.1, frameCount * 0.01) * TWO_PI;
