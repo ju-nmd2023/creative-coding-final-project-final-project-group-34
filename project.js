@@ -13,7 +13,7 @@ let fieldSizeX;
 let fieldSizeY;
 const FlowDivider = 8;
 
-// Perlin Noise background
+// Vera Molnar background
 const size = 80;
 let numCols;
 let numRows;
@@ -32,6 +32,10 @@ function generateField() {
   }
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
+// SETUP
+
 function setup() {
   createCanvas(innerWidth, innerHeight);
 
@@ -46,18 +50,22 @@ function setup() {
   // Create particles
   for (let i = 0; i < 2000; i++) {
     let angle = random(TWO_PI);
-    let speed = random(3, 11);
+    let speeds = random(3, 11);
 
     particles.push({
       x: cirkelx,
       y: cirkely,
-      vx: cos(angle) * speed,
-      vy: sin(angle) * speed,
+      vx: cos(angle) * speeds,
+      vy: sin(angle) * speeds,
       state: "orbit",
       orbitOffset: random(-100, 20),
     });
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+// DRAW FUNCTION
 
 function draw() {
   background(0, 50);
@@ -98,7 +106,7 @@ function draw() {
     }
 
     if (p.state === "orbit") {
-      // Particle movement
+      // particle movement
       p.x += p.vx;
       p.y += p.vy;
 
@@ -114,7 +122,7 @@ function draw() {
       }
     }
 
-    // rita partikeln
+    // draws the particle
     strokeWeight(2);
     stroke(250);
     line(p.x, p.y, p.x, p.y);
@@ -123,3 +131,46 @@ function draw() {
   pop();
   bgCounter += 0.08;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+// PLAYING SOUND
+
+let synth;
+let reverb;
+let chorus;
+
+const keyToNote = {
+  a: "C3",
+  s: "E3",
+  d: "G3",
+  f: "A3",
+  g: "C4",
+  h: "E4",
+  j: "G4",
+};
+
+window.addEventListener("load", () => {
+  reverb = new Tone.Reverb({ decay: 10, wet: 0.7 }).toDestination();
+  chorus = new Tone.Chorus(1.5, 3.5, 0.5).connect(reverb).start();
+
+  synth = new Tone.PolySynth(Tone.AMSynth, {
+    oscillator: { type: "sine" },
+    envelope: { attack: 3, decay: 1, sustain: 0.9, release: 6 },
+    modulation: { type: "triangle" },
+    modulationEnvelope: { attack: 2, decay: 1, sustain: 1, release: 4 },
+  }).connect(chorus);
+
+  synth.volume.value = 20;
+});
+
+window.addEventListener("click", () => {
+  Tone.start();
+});
+
+window.addEventListener("keydown", (e) => {
+  const note = keyToNote[e.key.toLowerCase()];
+  if (note) {
+    synth.triggerAttackRelease(note, "4n");
+  }
+});
