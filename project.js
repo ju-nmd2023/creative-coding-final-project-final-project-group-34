@@ -20,6 +20,20 @@ let numRows;
 const bgDivider = 2;
 let bgCounter = 2;
 
+// planets
+const pdivider = 1;
+const psize = 4;
+const pnumRows = 50;
+const pnumCols = 50;
+
+const planets = [
+  { x: 100, y: 200, radiusX: 30, radiusY: 30 },
+  { x: 1000, y: 350, radiusX: 50, radiusY: 50 },
+  { x: 300, y: 450, radiusX: 50, radiusY: 50 },
+  { x: 1100, y: 200, radiusX: 20, radiusY: 20 },
+  { x: 400, y: 100, radiusX: 20, radiusY: 20 },
+];
+
 //Flow Field
 function generateField() {
   noiseSeed(Math.random() * 10);
@@ -70,6 +84,35 @@ function setup() {
 function draw() {
   background(0, 50);
 
+/////////////////////////////////////////////////////////////////////////////////
+  // PLANETS
+  noStroke();
+  fill(70);
+
+  // the following 15 lines of code were adapted from Emilias portfolio & ChatGPT https://chatgpt.com/share/68efdb19-aa3c-8010-a191-3fa7e2733002 retrieved 15-10-2025
+  planets.forEach((cluster) => {
+    const { x: centerX, y: centerY, radiusX, radiusY } = cluster;
+
+    for (let y = 0; y < pnumRows; y++) {
+      for (let x = 0; x < pnumCols; x++) {
+        const posX = x * psize;
+        const posY = y * psize;
+
+        // Check if inside the ellipse boundary
+        const dx = posX - radiusX;
+        const dy = posY - radiusY;
+        if (
+          (dx * dx) / (radiusX * radiusX) + (dy * dy) / (radiusY * radiusY) <=
+          1
+        ) {
+          const value = noise(x / pdivider, y / pdivider) * psize;
+          ellipse(posX + centerX - radiusX, posY + centerY - radiusY, value);
+        }
+      }
+    }
+  });
+  //////////////////////////////////////////////////////////////////////////
+
   // Background Perlin Noise + Vera Molnár inspired lines
 
   for (let x = 0; x < numCols; x++) {
@@ -110,6 +153,7 @@ function draw() {
       p.x += p.vx;
       p.y += p.vy;
 
+      
       // COLLISSION
       let d = dist(p.x, p.y, cirkelx, cirkely);
       if (d >= radie) {
